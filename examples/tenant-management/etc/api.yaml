@@ -1,0 +1,7 @@
+Name: tenant-management
+Host: 0.0.0.0
+Port: 8080
+Log:
+  Level: info
+  Format: json
+  Output: stdout

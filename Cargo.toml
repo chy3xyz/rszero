@@ -3,6 +3,7 @@ members = [
     "rszero",
     "rszeroctl",
     "examples/user-service",
+    "examples/tenant-management",
 ]
 exclude = [
     "examples/bookstore",
