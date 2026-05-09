@@ -1,0 +1,9 @@
+Name: user-service
+Host: 0.0.0.0
+Port: 8080
+Log:
+  Level: info
+  Format: json
+Cache:
+  Host: 127.0.0.1
+  Port: 6379

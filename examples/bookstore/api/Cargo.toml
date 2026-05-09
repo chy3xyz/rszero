@@ -1,0 +1,19 @@
+[package]
+name = "bookstore-api"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "bookstore-api"
+path = "src/main.rs"
+
+[dependencies]
+rszero = { path = "../../../rszero" }
+bookstore-common = { path = "../common" }
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+axum = { version = "0.7", features = ["http1", "http2", "json", "macros", "matched-path", "original-uri", "tokio", "tower-log", "tracing", "ws", "multipart", "query", "form"] }
+chrono = { version = "0.4", features = ["serde"] }
+tracing = "0.1"

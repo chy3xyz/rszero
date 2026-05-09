@@ -1,0 +1,16 @@
+Name: order-rpc
+ListenOn: 0.0.0.0:8082
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: order.rpc
+Log:
+  Level: info
+  Format: json
+Queue:
+  Kind: redis
+  Url: "redis://127.0.0.1:6379"
+Store:
+  Dsn: "postgres://postgres:postgres@localhost:5432/bookstore"
+  MaxConnections: 10
+  MinConnections: 2

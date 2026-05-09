@@ -1,0 +1,119 @@
+[package]
+name = "rszero"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Rust microservices framework — 1:1 go-zero复刻"
+
+[features]
+default = ["rest", "rpc", "cache", "store", "queue", "discovery", "trace", "auth", "metrics"]
+
+# REST API gateway (Axum)
+rest = ["dep:axum", "dep:tower", "dep:tower-http", "dep:tower-governor", "dep:governor"]
+
+# RPC service (Volo)
+rpc = ["dep:volo", "dep:volo-grpc", "dep:volo-thrift", "dep:volo-build", "discovery"]
+
+# Redis cache (fred)
+cache = ["dep:fred", "dep:dashmap"]
+
+# Database/ORM (sqlx + sea-orm)
+store = ["dep:sqlx", "dep:sea-orm"]
+
+# Message queue (lapin/RabbitMQ)
+queue = ["dep:lapin"]
+
+# Service discovery (etcd)
+discovery = ["dep:etcd-client"]
+
+# Distributed tracing (OpenTelemetry + Jaeger)
+trace = ["dep:opentelemetry", "dep:opentelemetry-sdk", "dep:opentelemetry-jaeger"]
+
+# Authentication (JWT + bcrypt)
+auth = ["dep:jsonwebtoken", "dep:bcrypt"]
+
+# Metrics (prometheus)
+metrics = ["dep:prometheus"]
+
+[dependencies]
+# Core (always included)
+tokio.workspace = true
+tokio-util = "0.7"
+
+# Logging / tracing (always included)
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tracing-appender.workspace = true
+
+# Config (always included)
+figment.workspace = true
+dotenvy.workspace = true
+
+# Random number generation (for shedder)
+fastrand = "2.0"
+
+# Async streaming
+futures-util = "0.3"
+
+# Optional: REST
+axum = { workspace = true, optional = true }
+tower = { workspace = true, optional = true }
+tower-http = { workspace = true, optional = true }
+tower-governor = { workspace = true, optional = true }
+governor = { workspace = true, optional = true }
+
+# Optional: RPC
+volo = { workspace = true, optional = true }
+volo-grpc = { workspace = true, optional = true }
+volo-thrift = { workspace = true, optional = true }
+volo-build = { workspace = true, optional = true }
+
+# Optional: Cache
+fred = { workspace = true, optional = true }
+dashmap = { workspace = true, optional = true }
+
+# Optional: Store
+sqlx = { workspace = true, optional = true }
+sea-orm = { workspace = true, optional = true }
+
+# Optional: Queue
+lapin = { workspace = true, optional = true }
+
+# Optional: Discovery
+etcd-client = { workspace = true, optional = true }
+
+# Optional: OpenTelemetry tracing backend
+opentelemetry = { workspace = true, optional = true }
+opentelemetry-sdk = { package = "opentelemetry_sdk", version = "0.20", features = ["trace", "metrics", "rt-tokio"], optional = true }
+opentelemetry-jaeger = { version = "0.19", features = ["rt-tokio"], optional = true }
+
+# Optional: Auth
+jsonwebtoken = { workspace = true, optional = true }
+bcrypt = { workspace = true, optional = true }
+
+# Metrics
+prometheus = { workspace = true, optional = true }
+
+# Common (always included)
+base64.workspace = true
+mime_guess = "2.0"
+notify.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+once_cell.workspace = true
+async-trait.workspace = true
+anyhow.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+serde_yaml = "0.9"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
+tokio = { version = "1.0", features = ["full"] }
+tower = { version = "0.4", features = ["full"] }
+
+[[bench]]
+name = "framework_benchmarks"
+harness = false

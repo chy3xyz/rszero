@@ -1,0 +1,8 @@
+# Allow wildcard imports in test modules
+allowed-wildcard-imports = ["prelude"]
+
+# Disallow certain patterns
+disallowed-methods = []
+
+# Cognitive complexity threshold
+cognitive-complexity-threshold = 25

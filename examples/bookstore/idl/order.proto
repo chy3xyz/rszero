@@ -1,0 +1,54 @@
+syntax = "proto3";
+package bookstore.order;
+
+service OrderService {
+    rpc CreateOrder(CreateOrderReq) returns (Order);
+    rpc GetOrder(GetOrderReq) returns (Order);
+    rpc ListOrders(ListOrdersReq) returns (ListOrdersResp);
+    rpc CancelOrder(CancelOrderReq) returns (CancelOrderResp);
+}
+
+message Order {
+    string id = 1;
+    string user_id = 2;
+    string book_id = 3;
+    int32 quantity = 4;
+    double total = 5;
+    string status = 6;
+    int64 created_at = 7;
+    int64 updated_at = 8;
+}
+
+message CreateOrderReq {
+    string user_id = 1;
+    string book_id = 2;
+    int32 quantity = 3;
+}
+
+message GetOrderReq {
+    string id = 1;
+}
+
+message ListOrdersReq {
+    string user_id = 1;
+    string status = 2;
+    int32 page = 3;
+    int32 page_size = 4;
+}
+
+message ListOrdersResp {
+    repeated Order orders = 1;
+    int32 total = 2;
+    int32 page = 3;
+    int32 page_size = 4;
+}
+
+message CancelOrderReq {
+    string id = 1;
+    string reason = 2;
+}
+
+message CancelOrderResp {
+    bool success = 1;
+    string message = 2;
+}

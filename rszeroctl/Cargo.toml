@@ -1,0 +1,15 @@
+[package]
+name = "rszeroctl"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "rszero CLI scaffolding tool — 对标 goctl"
+
+[dependencies]
+rszero = { path = "../rszero", default-features = false }
+clap.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true

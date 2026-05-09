@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
+
+jobs:
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace --all-targets --all-features
+
+  doc:
+    name: Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo doc --workspace --no-deps --all-features
+
+  check-examples:
+    name: Check Examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --workspace --all-targets --all-features
+      - run: cd examples/bookstore && cargo check --all-targets
+
+  feature-matrix:
+    name: Feature Matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        features:
+          - ""
+          - "rest"
+          - "rest,metrics"
+          - "rest,auth"
+          - "cache"
+          - "store"
+          - "queue"
+          - "discovery"
+          - "trace"
+          - "rpc"
+          - "queue,cache"
+          - "rest,cache,store"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --package rszero --no-default-features --features "${{ matrix.features }}"
+
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-audit
+      #
+      # Ignored advisories — all are transitive dependencies with no fixed
+      # upstream release available, and none are exploitable in rszero's
+      # typical usage patterns (SQLite/Postgres + etcd IP discovery).
+      #
+      # RUSTSEC-2026-0119: hickory-proto O(n²) name compression DoS.
+      #   Only affects RPC clients resolving hostnames via untrusted DNS.
+      #   Mitigation: rszero uses etcd IP-based discovery by default.
+      #
+      # RUSTSEC-2026-0118: hickory-proto NSEC3 infinite loop.
+      #   Only affects DNSSEC validation. Not enabled by default.
+      #
+      # RUSTSEC-2023-0071: rsa Marvin Attack (timing sidechannel).
+      #   Only affects MySQL caching_sha2_password RSA auth.
+      #   Mitigation: rszero examples/tests use SQLite/Postgres, not MySQL.
+      #
+      # RUSTSEC-2024-0363: sqlx MySQL binary protocol misinterpretation.
+      #   Only affects MySQL wire protocol. No impact on SQLite/Postgres.
+      #   Will be auto-resolved when sea-orm upgrades to sqlx 0.8+.
+      #
+      - run: >
+          cargo audit
+          --ignore RUSTSEC-2026-0119
+          --ignore RUSTSEC-2026-0118
+          --ignore RUSTSEC-2023-0071
+          --ignore RUSTSEC-2024-0363

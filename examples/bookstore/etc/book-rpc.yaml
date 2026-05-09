@@ -1,0 +1,18 @@
+Name: book-rpc
+ListenOn: 0.0.0.0:8081
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: book.rpc
+Log:
+  Level: info
+  Format: json
+Cache:
+  Host: 127.0.0.1
+  Port: 6379
+  Db: 0
+  PoolSize: 10
+Store:
+  Dsn: "postgres://postgres:postgres@localhost:5432/bookstore"
+  MaxConnections: 10
+  MinConnections: 2

@@ -1,0 +1,53 @@
+# Security Policy
+
+## Supported Versions
+
+| Version | Supported          |
+| ------- | ------------------ |
+| 0.1.x   | :white_check_mark: |
+
+## Reporting a Vulnerability
+
+We take the security of rszero seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+
+**Please do NOT report security vulnerabilities through public GitHub issues.**
+
+Instead, please report them via email to [security@rszero.dev](mailto:security@rszero.dev).
+
+You should receive a response within 48 hours. If for some reason you do not, please follow up via email to ensure we received your original message.
+
+Please include the following information:
+
+- Type of issue (e.g., buffer overflow, SQL injection, cross-site scripting, etc.)
+- Full paths of source file(s) related to the manifestation of the issue
+- The location of the affected source code (tag/branch/commit or direct URL)
+- Any special configuration required to reproduce the issue
+- Step-by-step instructions to reproduce the issue
+- Proof-of-concept or exploit code (if possible)
+- Impact of the issue, including how an attacker might exploit it
+
+## Preferred Languages
+
+We prefer all communications to be in English or Chinese.
+
+## Disclosure Policy
+
+When we receive a security bug report, we will:
+
+1. Confirm the problem and determine the affected versions
+2. Audit code to find any similar problems
+3. Prepare fixes for all supported versions
+4. Release new security fix versions
+
+## Security Best Practices
+
+When using rszero in production:
+
+1. **Always use HTTPS** for API endpoints
+2. **Rotate JWT secrets** regularly via environment variables
+3. **Never commit** secrets to version control
+4. **Use environment variables** for sensitive configuration
+5. **Enable rate limiting** to prevent abuse
+6. **Monitor logs** for suspicious activity
+7. **Keep dependencies updated** (`cargo update`)
+8. **Use circuit breakers** to prevent cascading failures
