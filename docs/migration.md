@@ -1,12 +1,12 @@
 # go-zero → rszero 迁移指南
 
-> 本文档帮助 go-zero 用户零学习成本迁移到 rszero。
+> 本文档为熟悉 go-zero 的开发者提供迁移到 rszero 的参考。rszero 借鉴了 go-zero 的工程实践与微服务模式，同时充分发挥 Rust 的类型安全、内存安全和高性能特性。
 
 ---
 
 ## 概述
 
-rszero 完全对齐 go-zero 的设计理念、API 风格和目录约定。go-zero 用户可以几乎无缝迁移到 Rust 生态。
+rszero 与 go-zero 在架构理念、API 风格和目录约定上高度相通。熟悉 go-zero 的开发者可以快速理解 rszero 的设计，并将现有项目的模式迁移到 Rust 生态。
 
 ---
 
@@ -430,7 +430,7 @@ spec:
 
 ### Q: go-zero 的 `.api` 文件能直接用吗？
 
-A: 是的，rszero 完全兼容 go-zero 的 `.api` 文件语法。`rszeroctl api go` 会解析并生成 Rust 代码。
+A: rszero 支持解析 go-zero 的 `.api` 文件语法。`rszeroctl api go` 会将其转换为对应的 Rust 代码。
 
 ### Q: 需要重写所有业务逻辑吗？
 
@@ -446,4 +446,4 @@ A: 得益于 Rust 的零 GC 和编译期优化，内存占用降低约 5x，QPS 
 
 ### Q: 学习成本高吗？
 
-A: 如果你有 go-zero 经验，学习成本很低。主要需要学习 Rust 的 async/await 和所有权系统。
+A: 有 go-zero 经验的开发者会对 rszero 的架构感到熟悉。需要额外学习 Rust 的 async/await 和所有权系统。

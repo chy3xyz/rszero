@@ -5,7 +5,7 @@
 **State:** Greenfield — design spec only (`dev.md`), no source code yet.
 
 ## OVERVIEW
-rszero = Rust + Service + Zero. 1:1 Rust复刻 go-zero 一站式微服务框架。基于 Axum (REST) + Volo (RPC) 构建的企业级微服务框架。目标：go-zero 用户零学习成本迁移。
+rszero = Rust + Service + Zero. 一款面向 Rust 生态的云原生微服务框架，基于 Axum (REST) + Volo (RPC) 构建。融合现代 Rust 的内存安全、类型安全和高性能异步运行时，提供开箱即用的微服务全链路能力。
 
 ## STRUCTURE
 ```
@@ -13,8 +13,8 @@ rszero/                          # 框架核心仓库 (Cargo workspace)
 ├── rszero/                      # 核心 crate — 用户一键引入
 │   └── src/
 │       ├── lib.rs               # 统一导出 (prelude)
-│       ├── rest/                # Axum 封装 → 对标 go-zero rest
-│       ├── rpc/                 # Volo 封装 → 对标 go-zero zrpc
+│       ├── rest/                # Axum 封装 → REST 网关层
+│       ├── rpc/                 # Volo 封装 → RPC 服务层
 │       ├── config/              # 多环境配置 (figment + dotenvy)
 │       ├── log/                 # 结构化日志 (tracing)
 │       ├── cache/               # Redis 缓存 (fred)
@@ -26,7 +26,7 @@ rszero/                          # 框架核心仓库 (Cargo workspace)
 │       ├── middleware/          # 通用中间件 (JWT, 日志, 链路追踪)
 │       ├── trace/               # OpenTelemetry 链路追踪
 │       └── error/               # 全局统一错误处理 (thiserror)
-├── rszeroctl/                   # 代码生成脚手架 → 对标 goctl
+├── rszeroctl/                   # 代码生成脚手架 → 代码生成脚手架
 ├── examples/                    # 官方示例
 └── tests/                       # 单元/集成测试
 ```
@@ -39,15 +39,15 @@ rszero/                          # 框架核心仓库 (Cargo workspace)
 | 配置管理 | `rszero/src/config/` | figment (yaml/toml/env) |
 | 缓存 | `rszero/src/cache/` | fred (Redis) |
 | 数据库 | `rszero/src/store/` | sqlx + sea-orm |
-| 代码生成 | `rszeroctl/` | 对标 goctl 全量能力 |
+| 代码生成 | `rszeroctl/` | 完整代码生成能力 |
 | 错误处理 | `rszero/src/error/` | thiserror, 全局 RszeroError |
 
 ## CONVENTIONS
-- **模块命名**: 1:1 对齐 go-zero 组件名 (rest, rpc, config, log, cache, queue, store, limit, breaker, discovery)
+- **模块命名**: 借鉴云原生微服务通用组件命名 (rest, rpc, config, log, cache, queue, store, limit, breaker, discovery)
 - **导出风格**: `pub mod prelude` — 用户 `use rszero::prelude::*` 一键引入
 - **安全**: `#![forbid(unsafe_code)]` — 零 unsafe
 - **Cargo workspace**: resolver = "2", edition = "2021"
-- **业务项目结构**: 用户通过 rszeroctl 生成的项目目录与 go-zero 1:1 对齐 (api/, rpc/, idl/, common/, deploy/, etc/)
+- **业务项目结构**: 用户通过 rszeroctl 生成的项目目录遵循微服务通用约定 (api/, rpc/, idl/, common/, deploy/, etc/)
 
 ## ANTI-PATTERNS (THIS PROJECT)
 - **NEVER** use `unsafe` — `#![forbid(unsafe_code)]`

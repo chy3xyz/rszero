@@ -6,7 +6,7 @@
 
 ## 概述
 
-rszero 使用 [CloudWeGo Volo](https://github.com/cloudwego/volo) 作为 RPC 传输层，完全对齐 go-zero 的 zrpc 组件。
+rszero 使用 [CloudWeGo Volo](https://github.com/cloudwego/volo) 作为 RPC 传输层，提供与 go-zero zrpc 相似的 RPC 能力。
 
 ### 架构
 

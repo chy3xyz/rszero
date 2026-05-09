@@ -1,15 +1,15 @@
-# rszero 完整方案：Rust 生态 1:1 复刻 go-zero 一站式微服务框架
+# rszero 完整方案：Rust 生态 云原生微服务框架
 ## 一、项目核心定位
-**rszero** = **R**ust + **S**ervice + **Zero**，完全对齐 go-zero 设计理念与开发体验，是基于 Axum + Volo 构建的**企业级一站式微服务框架**，主打：
-- 「零额外配置、约定优于配置」，go-zero 用户零学习成本无缝迁移
-- 代码生成优先，配套 `rszeroctl` 脚手架（对标 goctl）
-- 全链路生产级能力开箱即用，无需手动拼接 Rust 生态组件
-- 极致性能：无 GC、低内存占用、高并发低延迟，全面超越 go-zero 性能表现
+**rszero** = **R**ust + **S**ervice + **Zero**，面向 Rust 生态的云原生微服务框架，是基于 Axum + Volo 构建的**企业级一站式微服务框架**，主打：
+- 「零额外配置、约定优于配置」，开发者可快速上手，享受 Rust 的类型安全与高性能
+- 代码生成优先，配套 `rszeroctl` 脚手架（代码生成脚手架）
+- 全链路生产级能力开箱即用
+- 极致性能：无 GC、低内存占用、高并发低延迟
 
 ---
 
-## 二、整体架构（1:1 复刻 go-zero 经典架构）
-完全沿用 go-zero 业界验证的「API 网关层 + RPC 微服务层」分层架构，配套完整的服务治理与基础设施，架构图与 go-zero 完全一致：
+## 二、整体架构
+借鉴业界成熟的「API 网关层 + RPC 微服务层」分层架构，配套完整的服务治理与基础设施：
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        客户端/前端/上游服务                      │
@@ -42,45 +42,45 @@
 ```
 rszero/
 ├── Cargo.toml                          # 框架工作空间根配置
-├── README.md                           # 文档（对齐 go-zero 官方文档）
+├── README.md                           # 文档
 ├── rszero/                             # 框架核心主 crate（用户一键引入）
 │   ├── Cargo.toml
 │   └── src/
 │       ├── lib.rs                      # 统一导出所有模块
-│       ├── rest/                       # 对标 go-zero rest（Axum 封装）
-│       ├── rpc/                        # 对标 go-zero zrpc（Volo 封装）
-│       ├── config/                     # 对标 go-zero config（多环境配置）
-│       ├── log/                        # 对标 go-zero log（结构化日志）
-│       ├── cache/                      # 对标 go-zero cache（分布式缓存）
-│       ├── queue/                      # 对标 go-zero queue（消息队列）
-│       ├── store/                      # 对标 go-zero store（数据库/ORM）
-│       ├── limit/                      # 对标 go-zero limit（全局限流）
-│       ├── breaker/                    # 对标 go-zero breaker（熔断降级）
-│       ├── discovery/                  # 对标 go-zero discovery（服务发现）
+│       ├── rest/                       # REST 网关层（Axum 封装）
+│       ├── rpc/                        # RPC 服务层（Volo 封装）
+│       ├── config/                     # 多环境配置（figment + dotenvy）
+│       ├── log/                        # 结构化日志（tracing）
+│       ├── cache/                      # 分布式缓存（fred）
+│       ├── queue/                      # 消息队列（lapin）
+│       ├── store/                      # 数据库/ORM（sqlx + sea-orm）
+│       ├── limit/                      # 全局限流（tower-governor）
+│       ├── breaker/                    # 熔断降级（内置实现）
+│       ├── discovery/                  # 服务发现（etcd-client）
 │       ├── middleware/                 # 通用中间件（鉴权、日志、链路追踪）
 │       ├── trace/                      # 链路追踪（OpenTelemetry）
 │       └── error/                      # 全局统一错误处理
-├── rszeroctl/                          # 对标 goctl，代码生成脚手架
+├── rszeroctl/                          # 代码生成脚手架
 ├── examples/                           # 官方示例（用户服务、订单服务、网关）
 └── tests/                              # 全量单元测试、集成测试
 ```
 
 ### 3.2 用户业务项目标准结构（go-zero 用户完全熟悉）
-用户通过 `rszeroctl` 一键生成的业务项目，目录和 go-zero 1:1 对齐：
+用户通过 `rszeroctl` 一键生成的业务项目，目录遵循微服务通用约定：
 ```
 your-project/
 ├── .env                                # 环境配置
 ├── Cargo.toml                          # Rust 工作空间配置
-├── etc/                                # 配置文件目录（对标 go-zero etc）
+├── etc/                                # 配置文件目录（配置文件目录）
 │   ├── api.yaml                        # 网关配置
 │   └── user-rpc.yaml                   # RPC 服务配置
-├── api/                                # API 网关层（对标 go-zero api）
-│   ├── desc/                           # API 定义文件（对标 go-zero api desc）
+├── api/                                # API 网关层（API 网关层）
+│   ├── desc/                           # API 定义文件（API 定义文件）
 │   ├── handler/                        # HTTP 处理器
 │   ├── middleware/                     # 网关中间件
 │   ├── types/                          # 请求/响应类型定义
 │   └── main.rs                         # 网关启动入口
-├── rpc/                                # RPC 微服务层（对标 go-zero rpc）
+├── rpc/                                # RPC 微服务层（RPC 微服务层）
 │   ├── user/                           # 用户微服务
 │   │   ├── desc/                       # Thrift/Protobuf IDL 文件
 │   │   ├── logic/                      # 业务逻辑层
@@ -165,10 +165,10 @@ once_cell = "1.19"
 async-trait = "0.1"
 ```
 
-### 4.2 核心模块 1:1 对齐 go-zero 实现
+### 4.2 核心模块与云原生微服务组件对应
 #### rszero/src/lib.rs（统一导出，用户一键引入）
 ```rust
-//! rszero: Rust 一站式微服务框架，对标 go-zero
+//! rszero: Rust 一站式微服务框架
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
@@ -210,8 +210,8 @@ pub mod prelude {
 
 ---
 
-## 五、核心工具链：rszeroctl（对标 goctl，框架核心竞争力）
-完全复刻 goctl 的核心能力，是 rszero 的开发效率核心，支持：
+## 五、核心工具链：rszeroctl
+rszeroctl 的核心能力，是 rszero 的开发效率核心，支持：
 ### 5.1 核心功能
 | 功能 | 对应 goctl 能力 | 说明 |
 |------|----------------|------|
@@ -227,13 +227,13 @@ pub mod prelude {
 # 安装 rszeroctl
 cargo install rszeroctl
 
-# 1. 一键生成 API 网关项目（对标 goctl api go）
+# 1. 一键生成 API 网关项目
 rszeroctl api go --api desc/user.api --dir ./api
 
-# 2. 一键生成 RPC 微服务（对标 goctl rpc protoc）
+# 2. 一键生成 RPC 微服务
 rszeroctl rpc protoc ./idl/user.proto --go_out=./rpc/user --go-grpc_out=./rpc/user
 
-# 3. 一键生成数据库 Model 代码（对标 goctl model mysql）
+# 3. 一键生成数据库 Model 代码
 rszeroctl model mysql datasource --url "mysql://root:123456@localhost:3306/test" --table "users" --dir ./model
 
 # 4. 一键生成 Dockerfile
@@ -264,7 +264,7 @@ rszeroctl new rszero-demo
 cd rszero-demo
 ```
 
-### 步骤3：编写 API 定义（对标 go-zero .api 文件）
+### 步骤3：编写 API 定义
 新建 `api/desc/user.api`：
 ```
 type (
