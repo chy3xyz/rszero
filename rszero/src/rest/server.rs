@@ -249,6 +249,19 @@ impl RszeroServer {
         self
     }
 
+    /// Mount the built-in monitoring dashboard at `/dashboard`.
+    ///
+    /// Provides a real-time UI with zero build step — all assets are loaded
+    /// from CDN (HTMX + Alpine.js + Tailwind CSS).
+    ///
+    /// Requires the `dashboard` feature (enabled by default).
+    #[cfg(feature = "dashboard")]
+    pub fn with_dashboard(mut self) -> Self {
+        self.router = crate::dashboard::mount(self.router);
+        tracing::info!("dashboard mounted at /dashboard");
+        self
+    }
+
     /// Add a global rate limiter (requests per second, burst size).
     pub fn with_rate_limiter(mut self, per_second: u64, burst_size: u32) -> Self {
         self.router = self.router.layer(crate::limit::custom_rate_limiter(per_second, burst_size));

@@ -4,10 +4,10 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Rust microservices framework — 1:1 go-zero复刻"
+description = "A cloud-native microservices framework for the Rust ecosystem"
 
 [features]
-default = ["rest", "rpc", "cache", "store", "queue", "discovery", "trace", "auth", "metrics"]
+default = ["rest", "rpc", "cache", "store", "queue", "discovery", "trace", "auth", "metrics", "dashboard"]
 
 # REST API gateway (Axum)
 rest = ["dep:axum", "dep:tower", "dep:tower-http", "dep:tower-governor", "dep:governor"]
@@ -35,6 +35,9 @@ auth = ["dep:jsonwebtoken", "dep:bcrypt"]
 
 # Metrics (prometheus)
 metrics = ["dep:prometheus"]
+
+# Built-in monitoring dashboard (HTMX + Alpine.js + Tailwind CSS)
+dashboard = ["rest"]
 
 [dependencies]
 # Core (always included)

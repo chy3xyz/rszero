@@ -1,9 +1,10 @@
-//! rszero: Rust 一站式微服务框架，对标 go-zero
+//! rszero: A cloud-native microservices framework for the Rust ecosystem.
 //!
 //! # Overview
 //!
 //! rszero is a microservices framework built on Axum (REST) and Volo (RPC),
-//! designed as a 1:1 Rust port of go-zero.
+//! combining modern Rust's memory safety and performance with battle-tested
+//! distributed systems patterns.
 //!
 //! # Quick Start
 //!
@@ -25,10 +26,10 @@
 // ─── Service Layer ────────────────────────────────────────────────────────
 
 #[cfg(feature = "rest")]
-/// REST API gateway — Axum wrapper replicating go-zero rest.
+/// REST API gateway built on Axum.
 pub mod rest;
 #[cfg(feature = "rpc")]
-/// RPC service layer — Volo wrapper replicating go-zero zrpc.
+/// RPC service layer built on Volo (gRPC/Thrift).
 pub mod rpc;
 
 // ─── Infrastructure Layer ─────────────────────────────────────────────────
@@ -89,8 +90,11 @@ pub mod saga;
 #[cfg(feature = "trace")]
 /// Trace context propagation.
 pub use trace::propagation;
-/// go-zero `.api` file parser.
+/// `.api` file parser (compatible with go-zero syntax).
 pub mod api;
+#[cfg(feature = "dashboard")]
+/// Lightweight built-in monitoring dashboard (HTMX + Alpine.js + Tailwind).
+pub mod dashboard;
 /// Task scheduler for periodic and delayed jobs.
 pub mod scheduler;
 /// Background job worker.
